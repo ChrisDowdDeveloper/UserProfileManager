@@ -1,23 +1,22 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getUsers } from "../api/userApi";
 
 const useUsers = () => {
-    const { users, setUsers } = useUsers();
+  const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const data = await getUsers();
-                setUsers(data);
-            } catch(error) {
-                console.error('Failed to load users:', error);
-            }
-        }
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const data = await getUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Failed to load users:", error);
+      }
+    }
+    fetchUsers();
+  }, []);
 
-        fetchUsers();
-    }, [setUsers]);
-
-    return users;
-}
+  return users;
+};
 
 export default useUsers;

@@ -26,7 +26,6 @@ const CreateUser = () => {
     }, [navigate, setUsers]);
   return (
     <div>
-        <h1 className='text-2xl font-bold mb-4'>Create New User</h1>
         <UserForm 
             initialData={initialFormData}
             onSubmit={handleCreate}
