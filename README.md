@@ -1,13 +1,52 @@
-# React + Vite
+### Frontend Setup (ReactJS UI)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend is a ReactJS application built using Vite.
 
-Currently, two official plugins are available:
+**Prerequisites (Frontend):**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Node.js**: LTS version recommended (which includes npm). You can download it from [nodejs.org](https://nodejs.org/).
 
-## Expanding the ESLint configuration
+**Setup and Running:**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# UserProfileManager
+1.  **Navigate to Frontend Directory**:
+    Assuming your frontend code is in a sub-directory (e.g., `frontend` or `ui`) within your main project structure. Adjust the path as needed.
+    ```bash
+    cd <path-to-your-frontend-directory>
+    ```
+
+2.  **Install Dependencies**:
+    This will install React, Vite, Tailwind CSS, and other necessary packages listed in `package.json`.
+    ```bash
+    npm install
+    ```
+
+3.  **Run the Development Server**:
+    This command starts the Vite development server.
+    ```bash
+    npm run dev
+    ```
+    The application will typically be available at `http://localhost:5173` (Vite's default port, but check your terminal output for the exact URL).
+
+4.  **API Connection**:
+    * The frontend application communicates with the backend API.
+    * Ensure the backend API is running (typically at `https://localhost:8443` as configured in the backend setup).
+    * API calls within the React application will be directed to this backend URL. If the URL is hardcoded, it will be in the relevant service/component files. For production deployment, you would configure this URL via environment variables or a build-time configuration.
+
+5.  **Build for Production**:
+    To create an optimized production build of the frontend:
+    ```bash
+    npm run build
+    ```
+    The output files will be placed in a `dist` directory (default for Vite).
+
+6.  **Linting**:
+    To check for code quality and style issues:
+    ```bash
+    npm run lint
+    ```
+
+7.  **Preview Production Build**:
+    To locally preview the production build after running `npm run build`:
+    ```bash
+    npm run preview
+    ```
