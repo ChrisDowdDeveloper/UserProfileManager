@@ -1,5 +1,5 @@
-import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getUserById } from '../api/userApi';
 
 const UserDetails = () => {

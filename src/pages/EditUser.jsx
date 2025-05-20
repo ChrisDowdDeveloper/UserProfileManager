@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useUser } from '../context/UserContext';
+import { getUserById, updateUser } from '../api/userApi';
+import UserForm from '../components/UserForm';
 
 const EditUser = () => {
     const { id } = useParams();
@@ -25,7 +27,7 @@ const EditUser = () => {
     const handleUpdate = async(formData) => {
         try {
             const updated = await updateUser(id, formData)
-            setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...update } : u)));
+            setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...updated } : u)));
             navigate('/');
         } catch(err) {
             console.error('Failed to update user: ', err);
@@ -37,7 +39,7 @@ const EditUser = () => {
     <div>
         <h1 className='text-2xl font-bold mb-4'>Edit User</h1>
         {user ? (
-            <UserForm initialData={user} obSubmit={handleUpdate} isEditing />
+            <UserForm initialData={user} onSubmit={handleUpdate} isEditing />
         ) : (
             <p>Loading user...</p>
         )}

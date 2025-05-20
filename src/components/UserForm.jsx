@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// Define a reusable input field component for better structure and less repetition
+// Reusable input field component for better structure and less repetition
 const FormInput = ({ label, id, name, type = 'text', value, onChange, placeholder, required = false, disabled = false, className = '' }) => (
     <div>
         <label htmlFor={id || name} className="block text-sm font-medium text-gray-700 mb-1">
@@ -24,16 +24,16 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
     const [formData, setFormData] = useState({
         username: '',
         email: '',
-        socialSecurityNumber: '' // SSN is only for creation as per original logic
+        socialSecurityNumber: '' // SSN is only for creation 
     });
 
-    // Effect to populate form when initialData changes (e.g., for editing)
+    // Effect to populate form when initialData changes
     useEffect(() => {
         if (isEditing && initialData) {
             setFormData({
                 username: initialData.username || '',
                 email: initialData.email || '',
-                socialSecurityNumber: '' // SSN is not typically edited, and not shown in edit mode
+                socialSecurityNumber: '' // SSN is not edited, and not shown in edit mode
             });
         } else if (!isEditing) {
             // Reset form for creation mode, or if initialData is cleared
@@ -96,20 +96,19 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
                         label="Social Security Number"
                         id="socialSecurityNumber"
                         name="socialSecurityNumber"
-                        type="text" // Consider type="password" if you want to mask it, or handle formatting
+                        type="text" // Would use type="password" to mask it if the SSN needs to be hidden
                         value={formData.socialSecurityNumber}
                         onChange={handleChange}
                         placeholder="XXX-XX-XXXX"
-                        required // Assuming SSN is required for creation
+                        required 
                         disabled={isLoading}
-                        // Add pattern for SSN validation if needed: pattern="\d{3}-\d{2}-\d{4}"
                     />
                 )}
 
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
+                    className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 
                                 ${isLoading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'}
                                 transition duration-150 ease-in-out`}
                 >

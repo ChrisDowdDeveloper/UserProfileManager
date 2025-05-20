@@ -1,33 +1,60 @@
-//const backendUrl = "https://localhost:8443/api/users"
+const backendUrl = "https://localhost:8443/api/users";
 
-export const getUsers = async() => {
-    const res = await fetch('https://localhost:8443/api/users');
-    const data = await res.json();
+export const getUsers = async () => {
+  const res = await fetch(backendUrl);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Failed to fetch users: ${res.status} ${err}`);
+  }
+  return res.json();
+};
 
-    return data;
-}
+export const getUserById = async (id) => {
+  const res = await fetch(`${backendUrl}/${id}`);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Failed to fetch user ${id}: ${res.status} ${err}`);
+  }
+  return res.json();
+};
 
-export const deleteUser = async(id) => {
-
-}
+export const deleteUser = async (id) => {
+  const res = await fetch(`${backendUrl}/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Failed to delete user ${id}: ${res.status} ${err}`);
+  }
+  return;
+};
 
 export async function createUser(user) {
-  const res = await fetch('https://localhost:8443/api/users', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  const res = await fetch(backendUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
   });
-
   if (!res.ok) {
     const err = await res.text();
     throw new Error(`Failed to create user: ${res.status} ${err}`);
   }
-
-  return res.json(); 
+  return res.json();
 }
 
-export const getUserById = async(id) => {
-    
+export const updateUser = async(id, updatedUser) => {
+  const res = await fetch(`https://localhost:8443/api/users/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedUser),
+  });
+
+  if(!res.ok) {
+    const err = await res.text();
+    throw new Error(`Failed to update user: ${res.status} ${err}`);
+  }
+
+  return res.json();
 }
