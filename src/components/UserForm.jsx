@@ -39,7 +39,7 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
             // Reset form for creation mode, or if initialData is cleared
             setFormData({
                 username: initialData.username || '', // Allow pre-fill for creation if desired
-                email: initialData.email || '',
+                email: initialData.emaial || '',
                 socialSecurityNumber: initialData.socialSecurityNumber || ''
             });
         }
@@ -52,7 +52,7 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (isLoading) return; // Prevent multiple submissions
+        if (isLoading) return; // Prevents multiple submissions
 
         // Prepare data to submit, excluding SSN if editing
         const dataToSubmit = { ...formData };
@@ -75,6 +75,7 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
                     value={formData.username}
                     onChange={handleChange}
                     placeholder="Enter username"
+                    className='text-black'
                     required
                     disabled={isLoading}
                 />
@@ -83,6 +84,7 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
                     id="email"
                     name="email"
                     type="email"
+                    className='text-black'
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
@@ -96,6 +98,7 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
                         label="Social Security Number"
                         id="socialSecurityNumber"
                         name="socialSecurityNumber"
+                        className='text-black'
                         type="text" // Would use type="password" to mask it if the SSN needs to be hidden
                         value={formData.socialSecurityNumber}
                         onChange={handleChange}

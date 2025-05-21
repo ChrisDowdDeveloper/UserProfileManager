@@ -30,6 +30,13 @@ export const deleteUser = async (id) => {
 };
 
 export async function createUser(user) {
+  // Create a mutable copy of the user data to modify
+  const payload = { ...user };
+
+  // Format SSN: Remove dashes if socialSecurityNumber exists and is a string
+  if (payload.socialSecurityNumber && typeof payload.socialSecurityNumber === 'string') {
+    payload.socialSecurityNumber = payload.socialSecurityNumber.replace(/-/g, '');
+  }
   const res = await fetch(backendUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
