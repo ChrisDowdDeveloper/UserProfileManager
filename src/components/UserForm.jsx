@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-// Reusable input field component for better structure and less repetition
+/**
+ * Reusable input field component for forms
+ * @returns the rendered input field component
+ */
 const FormInput = ({ label, id, name, type = 'text', value, onChange, placeholder, required = false, disabled = false, className = '' }) => (
     <div>
         <label htmlFor={id || name} className="block text-sm font-medium text-gray-700 mb-1">
@@ -20,6 +23,10 @@ const FormInput = ({ label, id, name, type = 'text', value, onChange, placeholde
     </div>
 );
 
+/**
+ * Form component for creating or editing user profiles
+ * @returns the rendered user form
+ */
 const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = false }) => {
     const [formData, setFormData] = useState({
         username: '',
@@ -27,29 +34,42 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
         socialSecurityNumber: '' // SSN is only for creation 
     });
 
-    // Effect to populate form when initialData changes
+    // Effect to update formData when initialData or isEditing mode changes
+    // Used to populate forms when editing an existing user
     useEffect(() => {
         if (isEditing && initialData) {
             setFormData({
+                // In edit mode, populate with initialData, clear SSN as it can't be edited
                 username: initialData.username || '',
                 email: initialData.email || '',
                 socialSecurityNumber: '' // SSN is not edited, and not shown in edit mode
             });
         } else if (!isEditing) {
-            // Reset form for creation mode, or if initialData is cleared
+            // In creation mode, set form fields as default or empty
             setFormData({
-                username: initialData.username || '', // Allow pre-fill for creation if desired
-                email: initialData.emaial || '',
+                username: initialData.username || '',
+                email: initialData.email || '',
                 socialSecurityNumber: initialData.socialSecurityNumber || ''
             });
         }
-    }, [initialData, isEditing]);
+    }, [initialData, isEditing]); // Rerun effect if initialData or isEditing is changed
 
+    /**
+     * Handles changes to any input field in the form
+     * Updates corresponding field in formData
+     * @param {*} e - The input change event
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    /**
+     * Handles form submission
+     * Prevents default form submission, prepares data, and calls onSubmit prop
+     * @param {*} e - The form submission event
+     * @returns 
+     */
     const handleSubmit = (e) => {
         e.preventDefault();
         if (isLoading) return; // Prevents multiple submissions
@@ -115,6 +135,7 @@ const UserForm = ({ initialData = {}, onSubmit, isEditing = false, isLoading = f
                                 ${isLoading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'}
                                 transition duration-150 ease-in-out`}
                 >
+                    {/* Show loading spinner if isLoading is true */}
                     {isLoading ? (
                         <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

@@ -1,20 +1,31 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-// No need to import useUser here directly if useUsers handles context interaction
 import useUsers from '../hooks/useUsers'; 
 import { deleteUser as apiDeleteUser } from '../api/userApi';
 import UserCard from '../components/UserCard';
 
+/**
+ * Home components serves as main page for displaying list of user profiles
+ * Handles fetching users, displaying loading/errors, deleting users, 
+ * and refreshing the user list after user creation
+ * @returns the rendered Home page
+ */
 const Home = () => {
+    // Custom hook provides user data, loading state, error state, and refetch function
     const { data: users, isLoading, error: usersError, refetch } = useUsers(); 
+    // Hook to access the current URL's location, used to check for navigation state
     const location = useLocation();
+    // Hook for navigation
     const navigate = useNavigate();
 
+    /**
+     * Hook to handle refetching data if 'needsRefetch' is passed in location state.
+     * Triggered after user is created on CreateUser page
+     */
     useEffect(() => {
+        // Checks if location state contains 'needRefetch'
         if (location.state?.needsRefetch) {
-            console.log("Home: Detected needsRefetch flag. Scheduling refetch...");
-            // Introduce a small delay to give the backend Pub/Sub a moment to process.
+            // Introduce a small delay to give the backend Pub/Sub a moment to process and user is in database.
             const timerId = setTimeout(() => {
                 if (refetch) {
                     console.log("Home: Refetching users after delay.");
@@ -22,23 +33,27 @@ const Home = () => {
                 } else {
                     console.warn("Home: refetch function is not available from useUsers hook.");
                 }
-            }, 1500); // 1.5-second delay, adjust as needed
-
-            // Clear the state to prevent refetching on subsequent renders without a new creation
+            }, 1500);
+            
+            // Clears refetch flag from location state to prevent repeated fetches
             navigate(location.pathname, { replace: true, state: {} });
-            return () => clearTimeout(timerId); // Cleanup timer on component unmount or before next effect run
+
+            // Clears timeout if component unmounds or effect re-runs before timeout completes
+            return () => clearTimeout(timerId);
         }
     }, [location.state, refetch, navigate, location.pathname]);
 
+    /**
+     * Handles deletion of user
+     * Asks the user for confirmation, then calls API to delete user then refetches user list
+     * @param {*} id - ID of user to delete
+     */
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this user?")) {
             return; 
         }
         try {
             await apiDeleteUser(id);
-            // The `useUsers` hook now uses context, so calling `refetch` will update context.
-            // Or, if your context's setUsers can handle filtering, you could do an optimistic delete.
-            // For simplicity and consistency with the refetch pattern:
             if (refetch) refetch(); 
         } catch (error) {
             console.error("Failed to delete user:", id, error);
@@ -46,6 +61,7 @@ const Home = () => {
         }
     };
 
+    // Displays loading message while user data is being fetched
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -54,6 +70,7 @@ const Home = () => {
         );
     }
 
+    // Displays error message if fetching users failed
     if (usersError) {
         return (
             <div className="flex flex-col justify-center items-center h-screen text-red-600">
@@ -78,6 +95,7 @@ const Home = () => {
                 </Link>
             </header>
 
+            {/* Conditionally renders the list of users or a 'no users found' message */}
             {Array.isArray(users) && users.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {users.map((user) => (
@@ -85,6 +103,7 @@ const Home = () => {
                     ))}
                 </div>
             ) : (
+                // Displays message if there are no users and it's not currently loading
                 !isLoading && (
                     <div className="text-center py-10 mt-8 bg-white rounded-lg shadow">
                         <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

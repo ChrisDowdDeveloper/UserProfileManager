@@ -1,32 +1,46 @@
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUser as apiCreateUser } from '../api/userApi';
-import { useUser } from '../context/UserContext'; // For optimistic update
+import { useUser } from '../context/UserContext';
 import UserForm from '../components/UserForm';
 
+/**
+ * Component that provides page with a form to create a new user profile
+ * Handles form submission, API interaction, and navigation
+ * @returns 
+ */
 const CreateUser = () => {
+    // Hook for navigation
     const navigate = useNavigate();
     const { setUsers } = useUser(); // This setUsers is from UserContext
 
+    // Memoize the initial form data to prevent re-creation on every render
     const initialFormData = useMemo(() => ({
         username: '',
         email: '',
-        socialSecurityNumber: ''
+        socialSecurityNumber: '' // SSN required for creation
     }), []);
 
+    /**
+     * Handles submission of user creation form
+     * Calls API to create user, updates the local user list, navigates to home page
+     * Signals a need to refetch data for consistency
+     */
     const handleCreate = useCallback(async (formData) => {
         try {
+            // Calls API to create new user
             const newUserResponse = await apiCreateUser(formData); 
             
+            // If API call is successful, returns new user object with ID, adds to local state in UserContext
             if (newUserResponse && newUserResponse.id) {
-                 // Optimistically update the UserContext
                  setUsers((prevUsers) => [...prevUsers, newUserResponse]);
                  console.log("CreateUser: Optimistic update to context done.", newUserResponse);
             } else {
                 console.warn("CreateUser: newUserResponse did not contain an ID. Optimistic update might be incomplete.");
             }
-
-            // Navigate to home, signaling a refetch for eventual consistency
+            // Navigates to home page after succesful creation
+            // Pass 'needsRefetch: true' in navigation state
+            // Home component uses to trigger refresh for ensuring consistency with data
             navigate('/', { state: { needsRefetch: true } });
         } catch (err) {
             console.error("Failed to create user: ", err);
