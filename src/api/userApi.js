@@ -15,7 +15,7 @@ export const getUserById = async (id) => {
     const err = await res.text();
     throw new Error(`Failed to fetch user ${id}: ${res.status} ${err}`);
   }
-  return res.json();
+  return await res.json();
 };
 
 export const deleteUser = async (id) => {
